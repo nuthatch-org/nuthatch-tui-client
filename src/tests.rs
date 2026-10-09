@@ -1144,7 +1144,7 @@ fn live_metrics_snippet_parses_and_formats() {
     );
     // (1.5274509169999997 + 13.819300575999996) / (35 + 186) * 1000 ≈ 69.5 ms
     assert_eq!(format_rpc_latency(rpc_latency_ms(&metrics)), "69 ms avg");
-    // v2.7.1's CPU sampler was Linux-only (nightswatchhq/nuthatch#844), so on this macOS
+    // v2.7.1's CPU sampler was Linux-only (nuthatch-org/nuthatch#844), so on this macOS
     // capture the counter is present but pinned at 0.0: a real value, not a missing one.
     assert_eq!(
         metrics.get("nuthatch_process_cpu_seconds_total"),

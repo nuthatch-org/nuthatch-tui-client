@@ -1,8 +1,8 @@
 # Nuthatch TUI Client
 
-[![CI](https://github.com/nightswatchhq/nuthatch-tui-client/actions/workflows/ci.yml/badge.svg)](https://github.com/nightswatchhq/nuthatch-tui-client/actions/workflows/ci.yml)
+[![CI](https://github.com/nuthatch-org/nuthatch-tui-client/actions/workflows/ci.yml/badge.svg)](https://github.com/nuthatch-org/nuthatch-tui-client/actions/workflows/ci.yml)
 
-A fast, read-only terminal dashboard for a running [Nuthatch](https://github.com/nightswatchhq/nuthatch) nest.
+A fast, read-only terminal dashboard for a running [Nuthatch](https://github.com/nuthatch-org/nuthatch) nest.
 
 `nuthatch-tui-client` turns the Nuthatch HTTP API into an operator view: whether the nest is live, how far it is behind, which data it has collected, what has been sealed, and how many outbound RPC requests the indexer has made since it started.
 
@@ -76,23 +76,23 @@ Released binaries are built for Apple Silicon macOS and x86_64 Linux (glibc 2.35
 
 ```sh
 target=x86_64-unknown-linux-gnu   # or aarch64-apple-darwin
-base=https://github.com/nightswatchhq/nuthatch-tui-client/releases/latest/download
+base=https://github.com/nuthatch-org/nuthatch-tui-client/releases/latest/download
 curl -LO "$base/nuthatch-tui-client-$target.tar.gz"
 curl -LO "$base/nuthatch-tui-client-$target.tar.gz.sha256"
 shasum -a 256 -c "nuthatch-tui-client-$target.tar.gz.sha256"
-gh attestation verify "nuthatch-tui-client-$target.tar.gz" --repo nightswatchhq/nuthatch-tui-client
+gh attestation verify "nuthatch-tui-client-$target.tar.gz" --repo nuthatch-org/nuthatch-tui-client
 tar xzf "nuthatch-tui-client-$target.tar.gz"
 ./nuthatch-tui-client --version
 ```
 
 The checksum says the download is intact; the attestation says this repository's release workflow built it. On a nest's own host that saves installing a Rust toolchain to watch it.
 
-With a toolchain, `cargo install --git https://github.com/nightswatchhq/nuthatch-tui-client --locked` builds the current `main`.
+With a toolchain, `cargo install --git https://github.com/nuthatch-org/nuthatch-tui-client --locked` builds the current `main`.
 
 From a checkout:
 
 ```sh
-git clone git@github.com:nightswatchhq/nuthatch-tui-client.git
+git clone git@github.com:nuthatch-org/nuthatch-tui-client.git
 cd nuthatch-tui-client
 cargo run
 ```
@@ -215,7 +215,7 @@ The performance panel separates values reported since the Nuthatch process start
 | Decoded rows and reorgs | `nuthatch_rows_decoded_total`, `nuthatch_reorgs_total` | Process-lifetime counters. Past a million they are shortened to `12.3M` so that the line keeps its tail. |
 | Indexed blocks | `last_block` from `/ready` | Difference over the selected rolling window, not a process counter. |
 | Resident memory | `nuthatch_rss_bytes` | Current process RSS as reported by Nuthatch. Shown as `unavailable` when that metric is absent. |
-| CPU utilisation | `nuthatch_process_cpu_seconds_total` | A cumulative CPU-seconds counter; the client derives a rolling percentage over the selected window, distinct from the lifetime counters above. Shown as `unavailable` on a Nuthatch that does not publish the series, `warming up` before the first full window of samples. Nuthatch before 3.0.0 read `/proc/self/stat` and nothing else ([nightswatchhq/nuthatch#844](https://github.com/nightswatchhq/nuthatch/issues/844)), so such a nest hosted off Linux publishes the counter pinned at 0.0 and the client shows a flat `0.0%`. From 3.9.0 the header shows the nest's version, which settles the question at a glance. |
+| CPU utilisation | `nuthatch_process_cpu_seconds_total` | A cumulative CPU-seconds counter; the client derives a rolling percentage over the selected window, distinct from the lifetime counters above. Shown as `unavailable` on a Nuthatch that does not publish the series, `warming up` before the first full window of samples. Nuthatch before 3.0.0 read `/proc/self/stat` and nothing else ([nuthatch-org/nuthatch#844](https://github.com/nuthatch-org/nuthatch/issues/844)), so such a nest hosted off Linux publishes the counter pinned at 0.0 and the client shows a flat `0.0%`. From 3.9.0 the header shows the nest's version, which settles the question at a glance. |
 | Disk footprint | `nuthatch_hot_store_bytes`, `nuthatch_sealed_segments_bytes` | Current on-disk bytes of the mutable hot store and sealed Parquet segments, summed across mounted nests. Shown as `unavailable` when the metric is absent, and as `0 B` when it is present and genuinely zero, which is what a nest that has sealed nothing yet reports. |
 | RPC endpoint health | `nuthatch_rpc_endpoint_failures_total`, `nuthatch_rpc_endpoint_retries_total`, `nuthatch_rpc_request_duration_seconds_{sum,count}` | Failure and retry counts, and average round-trip latency, summed across every configured RPC endpoint the same way this client already aggregates labelled series like RPC methods. Latency reads `no calls yet` if the histogram is present but empty, `unavailable` if Nuthatch does not publish it. |
 | SQL and alerts | `nuthatch_sql_queries_total`, `nuthatch_sql_rejections_total`, `nuthatch_alert_outbox_depth` | Queries the nest has served and refused since it started, and alerts waiting to be delivered. Rejections turn yellow once there are any. Nuthatch publishes rejections both as a total and by reason; the client takes the total rather than adding the two. |
@@ -229,7 +229,7 @@ The dashboard degrades each of these independently rather than displaying a misl
 - The client is a dashboard, not a general SQL workbench. It presents a summary and a live feed for the selected event table.
 - The sync gauge needs the tip to move between two samples before it knows the chain's block rate. Until then it treats one block as the expected lag.
 - It reports request count, not exact provider cost. Billing models differ by provider and method.
-- On Nuthatch before 3.0.0, CPU utilisation is only accurate when the nest itself is Linux-hosted; a Mac-hosted nest reports a flat `0.0%` rather than `unavailable` ([nightswatchhq/nuthatch#844](https://github.com/nightswatchhq/nuthatch/issues/844)).
+- On Nuthatch before 3.0.0, CPU utilisation is only accurate when the nest itself is Linux-hosted; a Mac-hosted nest reports a flat `0.0%` rather than `unavailable` ([nuthatch-org/nuthatch#844](https://github.com/nuthatch-org/nuthatch/issues/844)).
 - A restart is only seen if it happens while the client is watching, and only if the counters have not climbed past their old values by the next sample. A restart before the client started is invisible to it.
 - `--ssh` needs non-interactive authentication to the host.
 - The screen wants 100 columns by 31 rows for everything at once. It stays usable smaller, in the order set out under [Terminal size](#terminal-size), but the performance panel's longest lines truncate below 100 columns.
