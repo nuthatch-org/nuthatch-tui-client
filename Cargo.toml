@@ -10,7 +10,7 @@ edition = "2024"
 rust-version = "1.88"
 description = "A fast, read-only terminal dashboard for a running Nuthatch nest."
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/nightswatchhq/nuthatch-tui-client"
+repository = "https://github.com/nuthatch-org/nuthatch-tui-client"
 readme = "README.md"
 
 [dependencies]

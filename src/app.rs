@@ -728,7 +728,7 @@ impl App {
     /// `Some(None)` distinguishes "the metric is published but we're still warming up a window"
     /// from `None`, "this Nuthatch does not publish `nuthatch_process_cpu_seconds_total` at all".
     /// There is a third case the client cannot see. Nuthatch before 3.0.0 read `/proc/self/stat`
-    /// and nothing else (nightswatchhq/nuthatch#844), so such a nest hosted off Linux publishes the
+    /// and nothing else (nuthatch-org/nuthatch#844), so such a nest hosted off Linux publishes the
     /// counter pinned at 0.0, which arrives here as `Some(Some(0.0))`.
     pub(crate) fn cpu_percent(&self) -> Option<Option<f64>> {
         let after = self.samples.last().copied()?;
