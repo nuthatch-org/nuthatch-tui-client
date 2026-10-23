@@ -1,3 +1,7 @@
+> **Archived 2026-10-23.** This client is superseded by `nuthatch watch`, the engine room built into
+> nuthatch itself ([RFC-0069](https://github.com/nuthatch-org/nuthatch/blob/main/docs/rfcs/0069-the-engine-room.md)).
+> Run `nuthatch watch` against a running nest instead.
+
 # Nuthatch TUI Client
 
 [![CI](https://github.com/nuthatch-org/nuthatch-tui-client/actions/workflows/ci.yml/badge.svg)](https://github.com/nuthatch-org/nuthatch-tui-client/actions/workflows/ci.yml)
